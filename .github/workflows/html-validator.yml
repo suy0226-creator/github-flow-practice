@@ -1,0 +1,31 @@
+# 워크플로우의 이름. GitHub Actions 탭에 표시됩니다.
+name: HTML Validator CI
+
+# 워크플로우를 실행할 조건 (트리거)
+on:
+  # 'main' 브랜치로 향하는 Pull Request가 생성되거나 업데이트될 때 실행
+  pull_request:
+    branches: [ main ]
+  # 직접 수동으로 실행할 수도 있게 함 (선택사항)
+  workflow_dispatch:
+
+# 실제 실행될 작업(들)을 정의
+jobs:
+  # 'validate-html' 이라는 이름의 job 정의
+  validate-html:
+    # 이 job을 실행할 가상 머신 환경 지정 (최신 우분투)
+    runs-on: ubuntu-latest
+
+    # job 내부에서 실행될 단계(들)
+    steps:
+      # 1단계: 코드 체크아웃
+      # - uses: 다른 사람이 만들어 둔 액션을 가져와 사용
+      # 'actions/checkout@v3'는 저장소의 코드를 가상 머신으로 가져오는 공식 액션
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2단계: HTML 유효성 검사기 실행
+      # - run: 쉘 명령어를 직접 실행
+      # 'html-validate'라는 도구를 사용해 현재 폴더의 모든 HTML 파일 검사
+      - name: Run HTML Validator
+        run: npx html-validate --ext html .
