@@ -1,0 +1,30 @@
+# 워크플로우 이름
+name: Deploy to GitHub Pages
+
+# 실행 조건: 'main' 브랜치에 push 이벤트가 발생했을 때 (즉, PR이 merge 되었을 때)
+on:
+  push:
+    branches:
+      - main
+
+# Job 정의
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1단계: 코드 체크아웃
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2단계: GitHub Pages에 배포
+      # 커뮤니티에서 만든 매우 유용한 배포 액션 사용
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # 배포 액션은 GITHUB_TOKEN이라는 특별한 비밀키가 필요함
+          # GitHub이 자동으로 생성해주므로 이렇게 명시만 하면 됨
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 배포할 브랜치 이름 지정 (아까 설정에서 지정한 이름)
+          publish_branch: gh-pages
+          # 배포할 파일들이 있는 디렉토리 ('.'는 프로젝트 루트)
+          publish_dir: .
